@@ -1,34 +1,53 @@
 import cv2
 import numpy as np
 import copy
+import itertools
+import matplotlib.pyplot as plt
+
 
 img = cv2.imread('WhatsApp Image 2017-09-16 at 14.46.20(1).jpeg')
 cap = cv2.VideoCapture('20171026_213832.mp4')
-cap.set(1, 520)
-_, frame = cap.read()
-cv2.imshow('img', frame)
-cv2.waitKey(0)
-img = frame
-rows, cols, ch = img.shape
-print(rows, cols, ch)
+cap.set(1, 1000)
+while True:
+    _, frame = cap.read()
+    cv2.imshow('img', frame)
+    cv2.waitKey(100)
+    img = frame
+    rows, cols, ch = img.shape
+    print(rows, cols, ch)
+    pts2 = np.float32([[0, 0], [300, 0], [0, 800], [300, 800]])
+    M = cv2.getPerspectiveTransform(np.float32(
+        [[822., 108.], [896.,  1.],  [946., 542.], [1066.,  444.]]), pts2)
 
+    dst = cv2.warpPerspective(img, M, (300, 800))
+    print(dst)
+    av = np.sum(dst, axis=1)
+    print(av)
+    plt.plot(list(range(len(av))), av, 'ro')
+    plt.axis([0, 800, 0, 80000])
+    plt.pause(0.1)
+
+    cv2.imshow('img', dst)
+    cv2.waitKey(100)
+    plt.clf()
 
 LineCopy = copy.deepcopy(img)
 
 BlackWhite = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-thresh = np.asarray((BlackWhite > 127) * 255, dtype=np.uint8)
+thresh = np.asarray((BlackWhite > 245) * 255, dtype=np.uint8)
 
 #ret,thresh = cv2.threshold(BlackWhite,200,255,0)
 image, contours, hierarchy = cv2.findContours(thresh, 1, 2)
-
+cv2.imshow('img', thresh)
+cv2.waitKey(1000)
 
 contours.sort(key=len, reverse=True)
-for con in contours:
+for con in contours[:1]:
+    ImgTemp = np.zeros([rows, cols], dtype=np.uint8)
     for k in con:
-        ImgTemp = np.zeros([rows, cols], dtype=np.uint8)
         ImgTemp[k[0][1], k[0][0]] = np.array(255, dtype=np.uint8)
-        cv2.imshow('img', ImgTemp)
-        cv2.waitKey(0)
+    cv2.imshow('img', ImgTemp)
+    cv2.waitKey(1000)
 
 LineParameters = []
 
@@ -79,32 +98,25 @@ def get_all_corners(geraden):
     return corner_list
 
 
-cone = corner(geraden[3][0], geraden[3][1],
-              geraden[1][0], geraden[1][1])
-print(LineCopy[cone[0], cone[1]])
-LineCopy[cone[0], cone[1]] = [255, 0, 0]
+coners = corner(geraden[3][0], geraden[3][1],
+                geraden[1][0], geraden[1][1])
 
 
 rows, cols, ch = img.shape
 
 pts1 = np.float32(get_right_corners(get_all_corners(geraden)))
-pts2 = np.float32([[0, 0], [300, 0], [0, 300], [300, 300]])
+pts2 = np.float32([[0, 0], [300, 0], [0, 800], [300, 800]])
 
-M = cv2.getPerspectiveTransform(pts1, pts2)
-print(M)
-
-dst = cv2.warpPerspective(img, M, (300, 300))
+M = cv2.getPerspectiveTransform(np.float32(
+    [[822., 108.], [896.,  1.],  [946., 542.], [1066.,  444.]]), pts2)
 
 
-cv2.imshow('img', dst)
-cv2.waitKey(0)
-
-# = (255, 0, 0)
-cv2.circle(LineCopy, (cone[0], cone[1]), 5, (255, 0, 0))
+for cone in np.float32([[822., 108.], [896.,  1.], [1066.,  444.], [946., 542.]]):
+    cv2.circle(LineCopy, (cone[0], cone[1]), 5, (255, 0, 0))
 
 cv2.imshow('houghlines3.jpeg', LineCopy)
 
-cv2.waitKey(0)
+cv2.waitKey(5000)
 
 cv2.imshow('bla', img)
-cv2.waitKey(0)
+cv2.waitKey(1000)
