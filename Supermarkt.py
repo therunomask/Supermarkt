@@ -2,10 +2,17 @@ import cv2
 import numpy as np
 import copy
 
-img = cv2.imread('/Users/noeth/Documents/Supermarkt/ReinGruen.jpeg')
+img = cv2.imread('WhatsApp Image 2017-09-16 at 14.46.20(1).jpeg')
+cap = cv2.VideoCapture('20171026_213832.mp4')
+cap.set(1, 520)
+_, frame = cap.read()
+cv2.imshow('img', frame)
+cv2.waitKey(0)
+img = frame
+rows, cols, ch = img.shape
+print(rows, cols, ch)
 
 
-ImgTemp = np.zeros([1280, 720], dtype=np.uint8)
 LineCopy = copy.deepcopy(img)
 
 BlackWhite = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -16,9 +23,12 @@ image, contours, hierarchy = cv2.findContours(thresh, 1, 2)
 
 
 contours.sort(key=len, reverse=True)
-
-for k in contours[0]:
-    ImgTemp[k[0][1], k[0][0]] = np.array(255, dtype=np.uint8)
+for con in contours:
+    for k in con:
+        ImgTemp = np.zeros([rows, cols], dtype=np.uint8)
+        ImgTemp[k[0][1], k[0][0]] = np.array(255, dtype=np.uint8)
+        cv2.imshow('img', ImgTemp)
+        cv2.waitKey(0)
 
 LineParameters = []
 
@@ -42,7 +52,7 @@ for k in range(4):
     LineParameters.append([[x1, y2], [x2, y2]])
 
 
-def conner(a, b, c, d):
+def corner(a, b, c, d):
     x = (-a[0] * b[1] * d[0] + a[1] * b[0] * d[0] + c[0] * b[0] *
          d[1] - b[0] * c[1] * d[0]) / (-b[1] * d[0] + b[0] * d[1])
     y = (a[0] * b[1] * d[1] - a[1] * b[0] * d[1] - b[1] * c[0] *
@@ -69,7 +79,7 @@ def get_all_corners(geraden):
     return corner_list
 
 
-cone = conner(geraden[3][0], geraden[3][1],
+cone = corner(geraden[3][0], geraden[3][1],
               geraden[1][0], geraden[1][1])
 print(LineCopy[cone[0], cone[1]])
 LineCopy[cone[0], cone[1]] = [255, 0, 0]
