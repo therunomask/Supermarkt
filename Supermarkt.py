@@ -50,10 +50,44 @@ def conner(a, b, c, d):
     return [int(x), int(y)]
 
 
+def get_right_corners(corner_list):
+    corner_list = np.asarray(corner_list)
+    middle = np.array([0.0, 0.0])
+    for corner in corner_list:
+        middle += corner
+    middle /= 6
+    corner_list = sorted(corner_list, key=lambda x: np.linalg.norm(x - middle))
+    return corner_list[:4]
+
+
+def get_all_corners(geraden):
+    corner_list = []
+    for i in range(4):
+        for j in range(i + 1, 4):
+            corner_list.append(corner(geraden[i][0], geraden[i][1],
+                                      geraden[j][0], geraden[j][1]))
+    return corner_list
+
+
 cone = conner(geraden[3][0], geraden[3][1],
               geraden[1][0], geraden[1][1])
 print(LineCopy[cone[0], cone[1]])
 LineCopy[cone[0], cone[1]] = [255, 0, 0]
+
+
+rows, cols, ch = img.shape
+
+pts1 = np.float32(get_right_corners(get_all_corners(geraden)))
+pts2 = np.float32([[0, 0], [300, 0], [0, 300], [300, 300]])
+
+M = cv2.getPerspectiveTransform(pts1, pts2)
+print(M)
+
+dst = cv2.warpPerspective(img, M, (300, 300))
+
+
+cv2.imshow('img', dst)
+cv2.waitKey(0)
 
 # = (255, 0, 0)
 cv2.circle(LineCopy, (cone[0], cone[1]), 5, (255, 0, 0))
