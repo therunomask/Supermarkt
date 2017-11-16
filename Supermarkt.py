@@ -26,10 +26,10 @@ while True:
     plt.plot(list(range(len(av))), av, 'ro')
     plt.axis([0, 800, 0, 80000])
     plt.pause(0.1)
-
+    plt.clf()
     cv2.imshow('img', dst)
     cv2.waitKey(100)
-    plt.clf()
+
 
 LineCopy = copy.deepcopy(img)
 
