@@ -10,25 +10,46 @@ cap = cv2.VideoCapture('20171026_213832.mp4')
 cap.set(1, 1000)
 while True:
     _, frame = cap.read()
-    cv2.imshow('img', frame)
-    cv2.waitKey(100)
+    #cv2.imshow('img', frame)
+    # cv2.waitKey(100)
     img = frame
     rows, cols, ch = img.shape
-    print(rows, cols, ch)
-    pts2 = np.float32([[0, 0], [300, 0], [0, 800], [300, 800]])
+    pts2 = np.float32([[0, 0], [300, 0], [0, 720], [300, 720]])
     M = cv2.getPerspectiveTransform(np.float32(
-        [[822., 108.], [896.,  1.],  [946., 542.], [1066.,  444.]]), pts2)
+        [[822., 108.], [896.,  -24.],  [946., 542.], [1066.,  444.]]), pts2)
 
-    dst = cv2.warpPerspective(img, M, (300, 800))
-    print(dst)
+    dst = cv2.warpPerspective(img, M, (300, 720))
+    for i in range(50):
+        for j in range(300):
+            dst[i, j] = (255, 255, 255)
     av = np.sum(dst, axis=1)
-    print(av)
+    av = np.sum(av, axis=1)
+    spagetti = False
+    for num in range(240):
+        if av[num] < 210000:
+            spagetti = True
+    oreo = False
+    for num in range(240, 480):
+        if av[num] < 210000:
+            oreo = True
+    waschmittel = False
+    for num in range(480, 720):
+        if av[num] < 210000:
+            waschmittel = True
+    if spagetti:
+        plt.text(90, 25000, 'spagetti')
+    if oreo:
+        plt.text(330, 25000, 'oreo')
+    if waschmittel:
+        plt.text(570, 25000, 'waschmittel')
     plt.plot(list(range(len(av))), av, 'ro')
-    plt.axis([0, 800, 0, 80000])
-    plt.pause(0.1)
+    plt.axvline(240)
+    plt.axvline(480)
+    plt.axis([0, 720, 0, 240000])
+    plt.pause(0.01)
     plt.clf()
-    cv2.imshow('img', dst)
-    cv2.waitKey(100)
+    cv2.imshow('img', np.concatenate((dst, img), axis=1))
+    cv2.waitKey(10)
 
 
 LineCopy = copy.deepcopy(img)

@@ -66,6 +66,26 @@ produkte
 
 prototypen plan genau aufschreiben
 
+    live affine transformation finden
+
+    waagen bauen
+
+    waagen integrieren
+
+    bewegung erkennen und solange nichts wegnehmen
+
+    gute anzeige was da ist
+
+    erkennen in welchen korb sachen wandern
+
+    evtl prorodukt erkennen
+    
+    dichte anordnung
+
+    mehre des selben typs
+
+    kassenbon anzeigen
+
 zeitplan
 
 investoren suche
