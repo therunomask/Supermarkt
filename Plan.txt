@@ -20,9 +20,9 @@ business plan:
 
    zahl der mitarbeiter
 
-   zahl der teams, einzelne zielsetztung
+   zahl der teams, einzelne zielsetzung
 
-   hardware instalation
+   hardware installation
      kamera zahl
      aufhängung gang kamaras
      aufhängung regal kamaras
