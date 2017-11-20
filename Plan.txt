@@ -5,14 +5,14 @@ business plan:
 
    reinigungspersonal
 
-   programieren:
+   programmieren:
      stereo vision
      laserscaner
-     kamaras in regalen
-     3d model
+     kameras in den regalen
+     3d modell
      klassifizierung von regal abschnitten
-     zahl der genommen produkte erkennen
-     motion tranking
+     zahl der genommenen produkte erkennen
+     motion tracking
      datenbank
      kassen interaktion
      waagen
