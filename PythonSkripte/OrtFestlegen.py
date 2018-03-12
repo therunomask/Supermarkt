@@ -60,6 +60,8 @@ class RegionsOfStuff:
         self.Memory*=self.GeometricParamter
         self.Memory+=VectorToMemorize
 
+    def Recall():
+        return WhichProduct(self.Memory)
     
 
 
