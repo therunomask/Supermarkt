@@ -22,16 +22,18 @@ class RegionOfProduct:
         self.name=name
 
     def overlap(self,ProductPlacement):
-        overlap=0
-        for k in oldvector*ProductPlacement:
-            overlap+=k
-
-        return overlap
+        return np.vdot(self.Region,ProductPlacement)
+        #overlap=0
+        #for k in self.Region*ProductPlacement:
+#            s in k:
+#                overlap+=s
+#        return overlap
 
 class RegionsOfStuff:
     ListOfProducts=[]
     NumberOfProducts=ListOfProducts.len()
     Memory=np.zeros(1000)
+    LastVector=np.zeros(1000)
     GeometricParamter=0.95      #magic number for series
 
     def __init__(self, NumberOfProducts,ListOfListOfVectors,Geomter=0.95):
@@ -42,6 +44,7 @@ class RegionsOfStuff:
         self.ListOfProducts=ListOfProducts
         self.NumberOfProducts=N
         self.Memory=ListOfListOfVector[0][0]-ListOfListOfVector[0][0]
+        self.LastVector=self.Memory
         self.GeometricParamter=Geomter
 
     def WhichProduct(SeriesOfVectors)# timing is given by scale
@@ -51,14 +54,15 @@ class RegionsOfStuff:
         for Product in self.ListOfProducts:
             prob=Product.overlap(SeriesOfVectors)
             if prob>MaxProbability:  #Problem appears if several products have the same 
-                MaxProbability=prob     #overlap
+                MaxProbability=prob                                         #overlap
                 GoodsName=Product.Productname
 
         return GoodsName
 
     def update(VectorToMemorize):
         self.Memory*=self.GeometricParamter
-        self.Memory+=VectorToMemorize
+        self.Memory+=(VectorToMemorize-self.LastVector)
+        self.LastVector=VectorToMemorize
 
     def Recall():
         return WhichProduct(self.Memory)
