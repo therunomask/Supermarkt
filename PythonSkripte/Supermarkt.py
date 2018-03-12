@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 img = cv2.imread('WhatsApp Image 2017-09-16 at 14.46.20(1).jpeg')
 cap = cv2.VideoCapture('20171026_213832.mp4')
-cap.set(1, 1000)
-while True:
+cap.set(1, 500)
+while False:
     _, frame = cap.read()
     #cv2.imshow('img', frame)
     # cv2.waitKey(100)
@@ -51,13 +51,18 @@ while True:
     cv2.imshow('img', np.concatenate((dst, img), axis=1))
     cv2.waitKey(10)
 
-
+_, frame = cap.read()
+cv2.imshow('img', frame)
+cv2.waitKey(1000)
+# cv2.waitKey(100)
+img = frame
+rows, cols, ch = img.shape
 LineCopy = copy.deepcopy(img)
 
 BlackWhite = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-thresh = np.asarray((BlackWhite > 245) * 255, dtype=np.uint8)
+#thresh = np.asarray((BlackWhite > 245) * 255, dtype=np.uint8)
 
-#ret,thresh = cv2.threshold(BlackWhite,200,255,0)
+ret, thresh = cv2.threshold(BlackWhite, 245, 255, 0)
 image, contours, hierarchy = cv2.findContours(thresh, 1, 2)
 cv2.imshow('img', thresh)
 cv2.waitKey(1000)
