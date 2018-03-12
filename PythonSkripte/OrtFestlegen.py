@@ -22,7 +22,7 @@ class RegionOfProduct:
         self.name=name
 
     def overlap(self,ProductPlacement):
-        return np.vdot(self.Region,ProductPlacement)
+        return np.vdot(self.Region,ProductPlacement)/3
         #overlap=0
         #for k in self.Region*ProductPlacement:
 #            s in k:
