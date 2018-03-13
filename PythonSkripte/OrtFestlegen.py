@@ -18,7 +18,7 @@ class RegionOfProduct:
                 Norm+=l
             oldvector=k
         Region/=Norm
-        self.Region.Region
+        self.Region=np.sqrt(Region)
         self.name=name
 
     def overlap(self,ProductPlacement):
