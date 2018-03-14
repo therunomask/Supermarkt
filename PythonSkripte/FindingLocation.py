@@ -1,29 +1,37 @@
-import cv2
 import numpy as np
 from scipy.stats import binom
-import copy
-import itertools
-import matplotlib.pyplot as plt
-from FixingLocation import RegionOfProduct
+import FixingLocation
 
 
-#erstelle Vektor mit farbverteilungen nach binomialverteilung mit kleinem p
-#
-#rechne skalarprodukte mit den produkten in der produktliste aus
-#
-#aendere p, stelle fest, ab welcher breite es mehr als einen uebergang
-#
-#von einem produkt zum naechsten gibt. ueberang zwischen produkten ist
-#
-#dann gegeben und wechsel zwischen den produkten der letztgroesseren gaussglocke
-#
 
 def BinomialVec(n,p):
     prevector=[binom.pmf(k,n,p) for k in range(n) ]
     return np.array(prevector)
 
 
-def MostLikelyPlace(VectorToLocate):
-    PartialSum=np.sum(VectorToLocate.Region,axis=1)
+def ProbabilityDensity(VectorToLocate):
+    PartialSum=np.sum(VectorToLocate.Region,axis=0)
+    n=np.shape(VectorToLocate)[0]
     overlap=[np.dot(PartialSum,BinomialVec(n,k/n)) for k in range(n)]
     return np.array(overlap)
+
+def BestPositions(PileOfStuff):
+    Probabilities=np.array([ProbabilityDensity(goods) for goods in PileOfStuff.ListOfProducts])
+    Positions=np.argmax(Probabilities,axis=0)
+    Changes=[]
+    FoundProducts=[]#not really  necessary right now; if we want to 
+    for k in range(Positions[1:]):  #include non canonical ordering it will become important
+        if Positions[k+1] != Positions[k]:
+            Changes.append(k)
+            FoundProducts.append(Positions[k])#this too
+
+    if len(FoundProducts)!=len(PileOfStuff.ListOfProducts):
+        print("positions of products is not unique!")
+    
+    FoundProducts.append(Positions[-1])#this too
+    return Changes
+
+
+    #todo: use this information in RegionsOfStuff in order to save where each product ends
+    # for simplest setup we need to revert the order of objects. (i.e. Product 0 is the
+    # one which is rightmost in the brightness vector)
