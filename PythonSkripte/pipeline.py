@@ -4,7 +4,7 @@ import copy
 import itertools
 import matplotlib.pyplot as plt
 from get_corners import get_corners
-from OrtFestlegen import RegionOfProduct, RegionsOfStuff
+from FixingLocation import RegionOfProduct, RegionsOfStuff
 
 cap = cv2.VideoCapture('20171026_213832.mp4')
 cap.set(cv2.CAP_PROP_POS_FRAMES, 500)
