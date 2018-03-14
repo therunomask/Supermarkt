@@ -4,6 +4,7 @@ from scipy.stats import binom
 import copy
 import itertools
 import matplotlib.pyplot as plt
+from FixingLocation import RegionOfProduct
 
 
 #erstelle Vektor mit farbverteilungen nach binomialverteilung mit kleinem p
@@ -23,4 +24,6 @@ def BinomialVec(n,p):
 
 
 def MostLikelyPlace(VectorToLocate):
-    overlap=[ for k in range(n)]
+    PartialSum=np.sum(VectorToLocate.Region,axis=1)
+    overlap=[np.dot(PartialSum,BinomialVec(n,k/n)) for k in range(n)]
+    return np.array(overlap)
