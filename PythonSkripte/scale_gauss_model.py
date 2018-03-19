@@ -1,20 +1,30 @@
 import numpy as np
-from scipy import multivariate_normal
+from scipy.stats import multivariate_normal
 
-def GaussModels
-    number_of_objects
-    list_of_gaussians
+class GaussModels:
+    number_of_objects=0
+    list_of_gaussians=[]
 
     def __init__(self, ListOfListOfVectors):
         self.number_of_objects=len(ListOfListOfVectors)
         for k in range(len(ListOfListOfVectors)):
-            means=np.mean(ListOfListOfVectors[k],axis=0)
-            covanriance_matrix=np.cov(np.array(ListOfVectors[k]).T)
-            list_of_gaussians.append(multivariate_normal(mean,covariance_matrix))
+            mean=np.mean(ListOfListOfVectors[k],axis=0)
+            print("the mean is {}".format(mean))
+            covariance_matrix=np.cov(np.array(ListOfListOfVectors[k]).T)
+            print("the covariance matrix is {}".format(covariance_matrix))
+            self.list_of_gaussians.append(multivariate_normal(mean,covariance_matrix))
 
-    def classifier(weight_vector):
-        Normalisation=np.sum([gaussian.pdf(weight_vector) for gaussian in self.list_of_gaussians])
-        
-        probabilities=[gaussian.pdf(obj)/Normalisation for gaussian in list_of_gaussians]
+    def classifier(self,weight_vector):
+        Normalisation=np.sum([gaussian.pdf(weight_vector) for gaussian in self.list_of_gaussians ]) 
+                
+        probabilities=[gaussian.pdf(weight_vector)/Normalisation for gaussian in self.list_of_gaussians]
 
         return(probabilities)
+
+
+
+G=GaussModels([np.array([1,2]),np.array([1,1,9])])
+
+               
+print(G.number_of_objects)
+print(G.classifier(4))
