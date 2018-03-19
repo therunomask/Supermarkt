@@ -20,13 +20,13 @@ def BestPositions(PileOfStuff):
     Positions=np.argmax(Probabilities,axis=0)
     Changes=[]
     FoundProducts=[]#not really  necessary right now; if we want to 
-    for k in range(Positions[1:]):  #include non canonical ordering it will become important
+    for k in range(Positions[:-1]):  #include non canonical ordering it will become important
         if Positions[k+1] != Positions[k]:
             Changes.append(k)
             FoundProducts.append(Positions[k])#this too
 
     if len(FoundProducts)!=len(PileOfStuff.ListOfProducts):
-        print("positions of products is not unique!")
+        raise Exception("positions of products is not unique!")
     
     FoundProducts.append(Positions[-1])#this too
     return Changes
