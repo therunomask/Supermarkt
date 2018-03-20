@@ -1,14 +1,17 @@
 import numpy as np
 
 
-class scale:
+class scale():
     weight_memory = []
     is_jumping = False
     treshhold = 10
 
+    def __init__(self):
+        pass
+
     def updated(self, new_value):
-        self.weight_memory += new_value
-        if len(self.weight_memory) > 10:
+        self.weight_memory.append(new_value)
+        if len(self.weight_memory) > 50:
             del self.weight_memory[0]
 
     def detect_jump(self):
@@ -22,8 +25,6 @@ class scale:
     def jump_size(self):
         j = 0
         a = [[self.weight_memory[-1]]]
-        for num, w in enumerate(self.weight_memory[1::-1]):
-            if abs(j[-1] - w) > 10:
                 a.append([w])
                 j += 1
             else:
@@ -32,3 +33,14 @@ class scale:
         return a[0] - a[1]
 
 
+a = np.random.random([100])
+s = scale()
+for i in a:
+    s.updated(i)
+
+for i in a:
+    s.updated(i)
+    b = s.detect_jump()
+    print(i, b)
+    if b:
+        print(s.jump_size())
