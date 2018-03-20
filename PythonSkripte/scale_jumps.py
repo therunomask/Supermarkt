@@ -1,24 +1,40 @@
 import numpy as np
+import usb.core
+import usb.util
 
 
 class scale():
-    weight_memory = []
-    is_jumping = False
-    treshhold = 0.2
+    delay = 5
+    weight_memory = [0]
+    jump_memory = [False]
+    treshhold = 20
+    dev = []
+    endpoint = []
 
-    def __init__(self):
-        pass
+    def __init__(self, delay, treshhold):
+        self.delay = delay
+        self.treshhold = treshhold
+        self.dev = usb.core.find(idVendor=0x0922, idProduct=0x8003)
+        self.dev.set_configuration()
+        self.endpoint = self.dev[0][(0, 0)][0]
+
+    def get_weight(self):
+        data = self.dev.read(self.endpoint.bEndpointAddress,
+                             self.endpoint.wMaxPacketSize)
+        return data[-1] * 255 + data[-2]
 
     def updated(self, new_value):
         self.weight_memory.append(new_value)
+        if abs(self.weight_memory[-1] - self.weight_memory[-2]) > self.treshhold:
+            self.jump_memory.append(True)
+        else:
+            self.jump_memory.append(False)
         if len(self.weight_memory) > 50:
             del self.weight_memory[0]
+            del self.jump_memory[0]
 
     def detect_jump(self):
-        if not self.is_jumping and abs(self.weight_memory[-1] - self.weight_memory[-2]) > self.treshhold:
-            self.is_jumping = True
-        if self.is_jumping and abs(self.weight_memory[-1] - self.weight_memory[-2]) <= self.treshhold:
-            self.is_jumping = False
+        if self.jump_memory[:-self.delay:-1] == [False for i in range(self.delay - 1)] and self.jump_memory[-self.delay] == True:
             return True
         return False
 
@@ -31,18 +47,17 @@ class scale():
                 j += 1
             else:
                 a[j].append(w)
-        a[:] = [np.mean(i) for i in a if len(i) > 1]
+        a[:] = [np.mean(i) for i in a if len(i) > self.delay]
         return a[0] - a[1]
 
 
-a = np.random.random([100])
-s = scale()
-for i in a:
-    s.updated(i)
+s = scale(5, 20)
+for i in range(30):
+    print(i)
+    s.updated(s.get_weight())
 
-for i in a:
-    s.updated(i)
+for i in range(1000):
+    s.updated(s.get_weight())
     b = s.detect_jump()
-    print(i, b)
     if b:
         print(s.jump_size())
