@@ -7,17 +7,13 @@ from Supermarkt.PythonSkripte.FixingLocation import RegionOfProduct, RegionsOfSt
 from Supermarkt.PythonSkripte.get_shelf_av import get_shelf_av
 from Supermarkt.PythonSkripte.scale_gauss_model.py import GaussModels
 
-# cap = cv2.VideoCapture('20171026_213832.mp4')
-# cap.set(cv2.CAP_PROP_POS_FRAMES, 500)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('20171026_213832.mp4')
+cap.set(cv2.CAP_PROP_POS_FRAMES, 500)
 print('corners')
 while(True):
     _, frame = cap.read()
     # frame=mingziframe
     corners = get_corners(frame, 245)
-    cv2.imshow('frame', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
     frame = drawArea(frame, corners, 0, 1, 0, 0.3)
     cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -56,6 +52,7 @@ while(True):
         itemtaken=(np.sign(scalle.jump_size())==-1.)
         probabilities=weight_prob.classifier(np.absolute(scale1.jump_size()))*regions.WhichProduct()[0]
         N=np.argmax(probabilities)
+        region.ChangeNumber()
     for num, stuff in enumerate(regions):
         frame = drawArea(
             frame, corners, stuff.LocationOnDisplay[0], stuff.LocationOnDisplay[1], num % 3, 0.3)
