@@ -5,26 +5,25 @@ import usb.util
 
 class scale():
     delay = 5
-    weight_memory = [0]
-    jump_memory = [False]
+    weight_memory = []
+    jump_memory = []
     treshhold = 20
     dev = []
     endpoint = []
 
     def __init__(self, delay=5, treshhold=20):
+        self.weight_memory = [0 for i in range(30)]
+        self.jump_memory = [False for i in range(30)]
         self.delay = delay
         self.treshhold = treshhold
         self.dev = usb.core.find(idVendor=0x0922, idProduct=0x8003)
         self.dev.set_configuration()
         self.endpoint = self.dev[0][(0, 0)][0]
 
-    def get_weight(self):
+    def updated(self):
         data = self.dev.read(self.endpoint.bEndpointAddress,
                              self.endpoint.wMaxPacketSize)
-        return data[-1] * 255 + data[-2]
-
-    def updated(self, new_value):
-        self.weight_memory.append(new_value)
+        self.weight_memory.append(data[-1] * 255 + data[-2])
         if abs(self.weight_memory[-1] - self.weight_memory[-2]) > self.treshhold:
             self.jump_memory.append(True)
         else:
@@ -52,9 +51,6 @@ class scale():
 
 
 s = scale()
-for i in range(30):
-    print(i)
-    s.updated(s.get_weight())
 
 for i in range(1000):
     s.updated(s.get_weight())
