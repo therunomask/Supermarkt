@@ -9,7 +9,7 @@ from Supermarkt.PythonSkripte.get_shelf_av import get_shelf_av
 
 # cap = cv2.VideoCapture('20171026_213832.mp4')
 # cap.set(cv2.CAP_PROP_POS_FRAMES, 500)
-cap = cv2.VideoCapture('0')
+cap = cv2.VideoCapture(0)
 print('corners')
 while(True):
     _, frame = cap.read()

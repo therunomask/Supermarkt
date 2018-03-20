@@ -1,10 +1,11 @@
 import numpy as np
-from FindingLocation import BestPositions
+from Supermarkt.PythonSkripte.FindingLocation import BestPositions
+
 
 class RegionOfProduct:
     Productname = ""
     Region = np.zeros(1000)
-    LocationOnDisplay=[]
+    LocationOnDisplay = []
 
     def __init__(self, name, ListOfVectors):
         oldvector = ListOfVectors[0]
@@ -21,15 +22,11 @@ class RegionOfProduct:
         self.Region = np.sqrt(Region)
         self.name = name
 
-    def SetLocationOnDisplay(self,Loc):
-        LocationOnDisplay=Loc
+    def SetLocationOnDisplay(self, Loc):
+        LocationOnDisplay = Loc
 
     def overlap(self, ProductPlacement):
         return np.vdot(self.Region, ProductPlacement) / 3
-
-
-
-
 
 
 class RegionsOfStuff:
@@ -51,14 +48,14 @@ class RegionsOfStuff:
         self.LastVector = self.Memory
         self.GeometricParamter = Geomter
 
-        transitions=BestPositions(self)
+        transitions = BestPositions(self)
 
-        beginning=0
+        beginning = 0
         for k in range(len(transitions)):
-            end=transitions[len(transitions)-k]
-            ListOfProducts[len(transitions)-k].SetLocationOnDisplay([beginning/transitions[-1],end/transitions[-1]])
-            beginning=end
-        
+            end = transitions[len(transitions) - k]
+            ListOfProducts[len(transitions) - k].SetLocationOnDisplay(
+                [beginning / transitions[-1], end / transitions[-1]])
+            beginning = end
 
     def WhichProduct(self, SeriesOfVectors):  # timing is given by scale
                     # could be an issue that we only use geometric series here
