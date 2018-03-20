@@ -21,17 +21,17 @@ def drawArea(frame, pts, ratio1, ratio2, color_nr, alpha):
     return output
 
 
-cap = cv2.VideoCapture('/Users/Mingzi/Movies/video.mp4')
-while True:
-    ret, frame = cap.read()
-    pts = np.array([[100, 200], [200, 300], [600, 200], [500, 100]], np.int32)
-    output = drawArea(frame, pts, 0.2, 0.6, 3, 0.3)
-    cv2.polylines(output, [pts], True, (0, 0, 255))
-    cv2.putText(output, '3', (100, 500), cv2.FONT_HERSHEY_SIMPLEX,
-                4, (0, 0, 255), 2, cv2.LINE_AA)
-    cv2.imshow("Image", output)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+# cap = cv2.VideoCapture('/Users/Mingzi/Movies/video.mp4')
+# while True:
+#     ret, frame = cap.read()
+#     pts = np.array([[100, 200], [200, 300], [600, 200], [500, 100]], np.int32)
+#     output = drawArea(frame, pts, 0.2, 0.6, 3, 0.3)
+#     cv2.polylines(output, [pts], True, (0, 0, 255))
+#     cv2.putText(output, '3', (100, 500), cv2.FONT_HERSHEY_SIMPLEX,
+#                 4, (0, 0, 255), 2, cv2.LINE_AA)
+#     cv2.imshow("Image", output)
+#     if cv2.waitKey(1) & 0xFF == ord('q'):
+#         break
+#
+# cap.release()
+# cv2.destroyAllWindows()
