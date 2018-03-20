@@ -9,16 +9,16 @@ def get_corners(img, treshhold):
     BlackWhite = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     _, thresh = cv2.threshold(BlackWhite, treshhold, 255, 0)
     _, contours, _ = cv2.findContours(thresh, 1, 2)
-    #cv2.imshow('img', thresh)
-    # cv2.waitKey(1000)
+#     cv2.imshow('img', thresh)
+#     cv2.waitKey(1000)
 
     contours.sort(key=len, reverse=True)
     for con in contours[:1]:
         ImgTemp = np.zeros([rows, cols], dtype=np.uint8)
         for k in con:
             ImgTemp[k[0][1], k[0][0]] = np.array(255, dtype=np.uint8)
-        #cv2.imshow('img', ImgTemp)
-        # cv2.waitKey(1000)
+        cv2.imshow('img', ImgTemp)
+        cv2.waitKey(1000)
 
     LineParameters = []
 
