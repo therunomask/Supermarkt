@@ -4,7 +4,7 @@ import numpy as np
 class scale:
     weight_memory = []
     is_jumping = False
-    treshhold = 0.2
+    treshhold = 10
 
     def updated(self, new_value):
         self.weight_memory += new_value
@@ -23,7 +23,7 @@ class scale:
         j = 0
         a = [[self.weight_memory[-1]]]
         for num, w in enumerate(self.weight_memory[1::-1]):
-            if abs(j[-1] - w) > self.treshhold:
+            if abs(j[-1] - w) > 10:
                 a.append([w])
                 j += 1
             else:
@@ -32,10 +32,3 @@ class scale:
         return a[0] - a[1]
 
 
-a = np.random.random([100])
-s = scale
-for i in a:
-    s.updated(i)
-    print(i, s.detect_jump())
-    if s.detect_jump():
-        print(s.jump_size())

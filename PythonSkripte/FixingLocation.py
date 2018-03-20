@@ -56,7 +56,7 @@ class RegionsOfStuff:
         beginning=0
         for k in range(len(transitions)):
             end=transitions[len(transitions)-k]
-            ListOfProducts[len(transitions)-k].SetLocationOnDisplay([beginning,end])
+            ListOfProducts[len(transitions)-k].SetLocationOnDisplay([beginning/transitions[-1],end/transitions[-1]])
             beginning=end
         
 

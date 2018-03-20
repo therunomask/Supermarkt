@@ -11,11 +11,11 @@ cap.set(cv2.CAP_PROP_POS_FRAMES, 500)
 print('corners')
 while(True):
     _, frame = cap.read()
-    corners = get_corners(frame, 245)
     # frame=mingziframe
     cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+corners = get_corners(frame, 245)
 print(corners)
 print('corners')
 items = 0
