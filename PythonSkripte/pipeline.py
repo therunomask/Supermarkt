@@ -12,6 +12,7 @@ cap.set(cv2.CAP_PROP_POS_FRAMES, 500)
 print('corners')
 while(True):
     _, frame = cap.read()
+    # frame=mingziframe
     corners = get_corners(frame, 245)
     frame = drawArea(frame, corners, 0, 1, 0, 0.3)
     cv2.imshow('frame', frame)

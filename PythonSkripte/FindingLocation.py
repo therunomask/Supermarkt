@@ -18,18 +18,18 @@ def ProbabilityDensity(VectorToLocate):
 def BestPositions(PileOfStuff):
     Probabilities=np.array([ProbabilityDensity(goods) for goods in PileOfStuff.ListOfProducts])
     Positions=np.argmax(Probabilities,axis=0)
-    Changes=[]
-    FoundProducts=[]#not really  necessary right now; if we want to 
-    for k in range(Positions[:-1]):  #include non canonical ordering it will become important
+#    Changes=[]
+    FoundProducts=[]
+    for k in range(Positions[:-1]):  
         if Positions[k+1] != Positions[k]:
-            Changes.append(k)
-            FoundProducts.append(Positions[k])#this too
+ #          Changes.append(k)
+            FoundProducts.append(Positions[k])
 
     if len(FoundProducts)!=len(PileOfStuff.ListOfProducts):
         raise Exception("positions of products is not unique!")
     
     FoundProducts.append(Positions[-1])#this too
-    return Changes
+    return FoundProducts
 
 
     #todo: use this information in RegionsOfStuff in order to save where each product ends

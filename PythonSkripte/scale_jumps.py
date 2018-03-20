@@ -11,7 +11,7 @@ class scale():
     dev = []
     endpoint = []
 
-    def __init__(self, delay, treshhold):
+    def __init__(self, delay=5, treshhold=20):
         self.delay = delay
         self.treshhold = treshhold
         self.dev = usb.core.find(idVendor=0x0922, idProduct=0x8003)
@@ -51,7 +51,7 @@ class scale():
         return a[0] - a[1]
 
 
-s = scale(5, 20)
+s = scale()
 for i in range(30):
     print(i)
     s.updated(s.get_weight())
