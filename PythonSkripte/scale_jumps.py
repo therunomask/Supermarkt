@@ -12,15 +12,15 @@ class scale():
     endpoint = []
 
     def __init__(self, delay=5, treshhold=20):
-        self.weight_memory = [0 for i in range(30)]
-        self.jump_memory = [False for i in range(30)]
+        self.weight_memory = [0 for _ in range(30)]
+        self.jump_memory = [False for _ in range(30)]
         self.delay = delay
         self.treshhold = treshhold
         self.dev = usb.core.find(idVendor=0x0922, idProduct=0x8003)
         self.dev.set_configuration()
         self.endpoint = self.dev[0][(0, 0)][0]
 
-    def updated(self):
+    def update(self):
         data = self.dev.read(self.endpoint.bEndpointAddress,
                              self.endpoint.wMaxPacketSize)
         self.weight_memory.append(data[-1] * 255 + data[-2])
@@ -33,7 +33,7 @@ class scale():
             del self.jump_memory[0]
 
     def detect_jump(self):
-        if self.jump_memory[:-self.delay:-1] == [False for i in range(self.delay - 1)] and self.jump_memory[-self.delay] == True:
+        if self.jump_memory[:-self.delay:-1] == [False for _ in range(self.delay - 1)] and self.jump_memory[-self.delay] == True:
             return True
         return False
 
@@ -50,10 +50,10 @@ class scale():
         return a[0] - a[1]
 
 
-s = scale()
-
-for i in range(1000):
-    s.updated(s.get_weight())
-    b = s.detect_jump()
-    if b:
-        print(s.jump_size())
+# s = scale()
+#
+# for i in range(1000):
+#     s.updated(s.get_weight())
+#     b = s.detect_jump()
+#     if b:
+#         print(s.jump_size())

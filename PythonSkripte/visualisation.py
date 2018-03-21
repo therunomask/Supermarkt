@@ -3,8 +3,8 @@ import numpy as np
 
 
 def drawArea(frame, pts, ratio1, ratio2, color_nr, alpha):
-    pts = np.array([[ratio1 * pts[3] + (1 - ratio1) * pts[0]], [ratio1 * pts[2] + (1 - ratio1) * pts[1]],
-                    [ratio2 * pts[2] + (1 - ratio2) * pts[1]], [ratio2 * pts[3] + (1 - ratio2) * pts[0]]], np.int32)
+    pts = np.array([[ratio1 * pts[1] + (1 - ratio1) * pts[0]], [ratio2 * pts[1] + (1 - ratio2) * pts[0]],
+                    [ratio1 * pts[3] + (1 - ratio1) * pts[2]], [ratio2 * pts[3] + (1 - ratio2) * pts[2]]], np.int32)
     overlay = frame.copy()
     output = frame.copy()
     if color_nr == 1:
@@ -19,6 +19,8 @@ def drawArea(frame, pts, ratio1, ratio2, color_nr, alpha):
     # apply the overlay
     cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
     return output
+
+# def draw_number(frame, pts, ratio1, ratio2, color_nr, number):
 
 
 # cap = cv2.VideoCapture('/Users/Mingzi/Movies/video.mp4')
