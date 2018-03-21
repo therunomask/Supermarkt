@@ -20,7 +20,7 @@ class scale():
         self.dev.set_configuration()
         self.endpoint = self.dev[0][(0, 0)][0]
 
-    def updated(self):
+    def update(self):
         data = self.dev.read(self.endpoint.bEndpointAddress,
                              self.endpoint.wMaxPacketSize)
         self.weight_memory.append(data[-1] * 255 + data[-2])
@@ -49,11 +49,17 @@ class scale():
         a[:] = [np.mean(i) for i in a if len(i) > self.delay]
         return a[0] - a[1]
 
+    def product_number(self, jumplist):
+        av_weigth = [jumplist[0]]
+        for jump in jumplist[1:]:
+            av_weigth += [jump / int(jump / np.mean(av_weigth) + 0.5)
+                          for i in range(int(jump / np.mean(av_weigth) + 0.5))]
+        return len(av_weigth)
 
-s = scale()
-
-for i in range(1000):
-    s.updated(s.get_weight())
-    b = s.detect_jump()
-    if b:
-        print(s.jump_size())
+# s = scale()
+#
+# for i in range(1000):
+#     s.updated(s.get_weight())
+#     b = s.detect_jump()
+#     if b:
+#         print(s.jump_size())
