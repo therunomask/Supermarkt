@@ -24,7 +24,7 @@ class AudioRecording:
     stream = "will be replaced by stream object"
     frames = []
 
-    def __init__(self, name="audio.wav"):
+    def __init__(self, name="audio"):
         self.audio = pyaudio.PyAudio()
         self.name = name
         self.stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS,
@@ -38,7 +38,7 @@ class AudioRecording:
         self.stream.stop_stream()
         self.stream.close()
         self.audio.terminate()
-        waveFile = wave.open(self.filename, 'wb')
+        waveFile = wave.open(self.filename + ".wav", 'wb')
         waveFile.setnchannels(self.CHANNELS)
         waveFile.setsampwidth(self.audio.get_sample_size(self.FORMAT))
         waveFile.setframerate(self.RATE)
