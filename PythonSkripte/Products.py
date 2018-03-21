@@ -1,17 +1,20 @@
 import numpy as np
 from FindingLocation import BestPositions
 
-class RegionOfProduct:
+
+class Products:
     Productname = ""
     Region = np.zeros(1000)
-    LocationOnDisplay=[]
-    Number=1
+    LocationOnDisplay = []
+    Number = 1
+    product_weigth = 0
 
-    def __init__(self, name, ListOfVectors,M):
-        oldvector = ListOfVectors[0]
-        Region = ListOfVectors[0] - ListOfVectors[0]  # copy dimenions
+    def __init__(self, name, brigthness_history, jump_list):
+        oldvector = brigthness_history[0]
+        Region = brigthness_history[0] - \
+            brigthness_history[0]  # copy dimenions
         Norm = 0 * np.sum(oldvector, axis=0)
-        for k in ListOfVectors:
+        for k in brigthness_history:
             Region += (oldvector - k)**2
             Norm += np.sum((oldvector - k)**2, axis=0)
             oldvector = k
@@ -21,52 +24,55 @@ class RegionOfProduct:
         Region = Region / Norm
         self.Region = np.sqrt(Region)
         self.name = name
-        self.Number=M
+        self.Number = self.product_number(jump_list)
 
-    def SetLocationOnDisplay(self,Loc):
-        LocationOnDisplay=Loc
+    def SetLocationOnDisplay(self, Loc):
+        LocationOnDisplay = Loc
 
     def overlap(self, ProductPlacement):
         return np.vdot(self.Region, ProductPlacement) / 3
 
+    def product_number(self, jumplist):
+        av_weigth = [jumplist[0]]
+        for jump in jumplist[1:]:
+            av_weigth += [jump / int(jump / np.mean(av_weigth) + 0.5)
+                          for _ in range(int(jump / np.mean(av_weigth) + 0.5))]
+        return len(av_weigth), np.mean(av_weigth)
 
 
-
-
-
-class RegionsOfStuff:
+class Product_list:
     ListOfProducts = []
     NumberOfProducts = len(ListOfProducts)
     Memory = np.zeros(1000)
     LastVector = np.zeros(1000)
     GeometricParamter = 0.95  # magic number for series
 
-    def __init__(self,  ListOfListOfVector, ListOfNumbers,Geomter=0.95):
-        self.NumberOfProducts = len(ListOfListOfVector)
+    def __init__(self,  all_brigthness_histories, ListOfNumbers, Geomter=0.95):
+        self.NumberOfProducts = len(all_brigthness_histories)
         ListOfProducts = []
         for N in range(self.NumberOfProducts):
-            ListOfProducts.append(RegionOfProduct(
-                "{}".format(N), ListOfListOfVector[N],ListOfNumbers[N]))
+            ListOfProducts.append(Products(
+                "{}".format(N), all_brigthness_histories[N], ListOfNumbers[N]))
 
         self.ListOfProducts = ListOfProducts
-        self.Memory = ListOfListOfVector[0][0] - ListOfListOfVector[0][0]
+        self.Memory = all_brigthness_histories[0][0] - all_brigthness_histories[0][0]
         self.LastVector = self.Memory
         self.GeometricParamter = Geomter
 
-        transitions=BestPositions(self)
+        transitions = BestPositions(self)
 
-        beginning=0
+        beginning = 0
         for k in range(len(transitions)):
-            end=transitions[len(transitions)-k]
-            ListOfProducts[len(transitions)-k].SetLocationOnDisplay([beginning/transitions[-1],end/transitions[-1]])
-            beginning=end
-        
+            end = transitions[len(transitions) - k]
+            ListOfProducts[len(transitions) - k].SetLocationOnDisplay(
+                [beginning / transitions[-1], end / transitions[-1]])
+            beginning = end
 
     def WhichProduct(self):  # timing is given by scale
                     # could be an issue that we only use geometric series here
         MaxProbability = 0
         GoodsName = ""
-        probabilities=[]
+        probabilities = []
         for Product in self.ListOfProducts:
             prob = Product.overlap(self.Memory)
             probabilities.append(prob)
@@ -74,7 +80,7 @@ class RegionsOfStuff:
                 MaxProbability = prob  # overlap
                 GoodsName = Product.Productname
 
-        return [np.array(probabilities),GoodsName]
+        return [np.array(probabilities), GoodsName]
 
     def update(self, VectorToMemorize):
         self.Memory *= self.GeometricParamter
@@ -84,14 +90,8 @@ class RegionsOfStuff:
     def Recall(self):
         return self.WhichProduct(self.Memory)
 
-
-    def ChangeNumber(self, Number, itemtaken):
-        if(itemtaken==True):
-            self.ListOfProducts[Number].Number-=1
-            if self.ListOfProducts[Number].Number<0:
-                raise Exception("negative number of items on the shelf!")
-
-
-
-
-
+    def ChangeNumber(self, Number, jump_size):
+        self.ListOfProducts[Number].Number += int(
+            jump_size / self.ListOfProducts[Number].product_weigth + 0.5)
+        if self.ListOfProducts[Number].Number < 0:
+            raise Exception("negative number of items on the shelf!")

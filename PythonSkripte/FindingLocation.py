@@ -1,6 +1,5 @@
 import numpy as np
 from scipy.stats import binom
-import Supermarkt.PythonSkripte.FixingLocation
 
 
 def BinomialVec(n, p):
@@ -23,7 +22,7 @@ def BestPositions(PileOfStuff):
     FoundProducts = []
     for k in range(Positions[:-1]):
         if Positions[k + 1] != Positions[k]:
-         #          Changes.append(k)
+            #          Changes.append(k)
             FoundProducts.append(Positions[k])
 
     if len(FoundProducts) != len(PileOfStuff.ListOfProducts):

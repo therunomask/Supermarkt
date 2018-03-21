@@ -12,8 +12,8 @@ class scale():
     endpoint = []
 
     def __init__(self, delay=5, treshhold=20):
-        self.weight_memory = [0 for i in range(30)]
-        self.jump_memory = [False for i in range(30)]
+        self.weight_memory = [0 for _ in range(30)]
+        self.jump_memory = [False for _ in range(30)]
         self.delay = delay
         self.treshhold = treshhold
         self.dev = usb.core.find(idVendor=0x0922, idProduct=0x8003)
@@ -33,7 +33,7 @@ class scale():
             del self.jump_memory[0]
 
     def detect_jump(self):
-        if self.jump_memory[:-self.delay:-1] == [False for i in range(self.delay - 1)] and self.jump_memory[-self.delay] == True:
+        if self.jump_memory[:-self.delay:-1] == [False for _ in range(self.delay - 1)] and self.jump_memory[-self.delay] == True:
             return True
         return False
 
@@ -49,12 +49,6 @@ class scale():
         a[:] = [np.mean(i) for i in a if len(i) > self.delay]
         return a[0] - a[1]
 
-    def product_number(self, jumplist):
-        av_weigth = [jumplist[0]]
-        for jump in jumplist[1:]:
-            av_weigth += [jump / int(jump / np.mean(av_weigth) + 0.5)
-                          for i in range(int(jump / np.mean(av_weigth) + 0.5))]
-        return len(av_weigth)
 
 # s = scale()
 #
