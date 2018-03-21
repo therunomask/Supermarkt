@@ -1,10 +1,11 @@
 import os
 
 
-def replace_audio(videoname, audioname):
+def replace_audio(videoname, audioname, finalname):
 
     os.system("ffmpeg -i " + videoname + ".mp4 -i " + audioname +
-              ".wav -c:" + videoname + " copy -map 0:" + videoname + ":0 -map 1:" + audioname + ":0 new.mp4")
+              ".wav -c:" + videoname + " copy -map 0:" + videoname + ":0 -map 1:"
+              + audioname + ":0 " + finalname + ".mp4")
 
 
-replace_audio("v", "a")
+replace_audio("v", "a", "newvideo")
