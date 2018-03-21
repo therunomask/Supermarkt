@@ -15,7 +15,7 @@ audio = pyaudio.PyAudio()
 
 
 class AudioRecording:
-    filename = "audio.wav"
+    filename = "audio"
     audio = "pyaudio.PyAudio()"
     FORMAT = pyaudio.paInt16
     CHANNELS = 2
@@ -26,7 +26,7 @@ class AudioRecording:
 
     def __init__(self, name="audio"):
         self.audio = pyaudio.PyAudio()
-        self.name = name
+        self.filename = name
         self.stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS,
                                       rate=self.RATE, input=True,
                                       frames_per_buffer=self.CHUNK)
