@@ -44,7 +44,11 @@ def get_corners(img, treshhold, oldcorners):
             LineParameters.append([[x1, y2], [x2, y2]])
         except:
             return oldcorners
-    return get_right_corners(get_all_corners(geraden))
+    corners = get_right_corners(get_all_corners(geraden))
+    if len(corners) != 4:
+        return oldcorners
+    else:
+        return corners
 
 
 def corner(a, b, c, d):
@@ -82,8 +86,11 @@ def get_right_corners(corner_list):
                     corner_list) if num1 != num3 and num2 != num3]))
         a = [corner for num, corner in enumerate(corner_list) if hits[np.argmin(
             distance_list)][0] != num and hits[np.argmin(distance_list)][1] != num]
-    a.sort(key=lambda x: x[0] + x[1])
+    else:
+        return corner_list
     print(a)
+    a.sort(key=lambda x: x[0] + x[1])
+    a[1:3] = a[2:0:-1]
     return a
 
 

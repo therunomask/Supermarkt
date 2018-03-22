@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 img = cv2.imread('WhatsApp Image 2017-09-16 at 14.46.20(1).jpeg')
 cap = cv2.VideoCapture('20171026_213832.mp4')
 cap.set(1, 500)
-while False:
+while True:
     _, frame = cap.read()
     #cv2.imshow('img', frame)
     # cv2.waitKey(100)

@@ -1,5 +1,6 @@
 import numpy as np
 from FindingLocation import BestPositions
+import matplotlib.pyplot as plt
 
 
 class Products:
@@ -18,16 +19,16 @@ class Products:
             Region += (oldvector - k)**2
             Norm += np.sum((oldvector - k)**2, axis=0)
             oldvector = k
-        Norm = np.transpose(np.reshape(np.repeat(Norm, 1000), (3, 1000)))
+        Norm = np.transpose(np.reshape(np.repeat(Norm, 50), (3, 50)))
  #       print(np.shape(Norm), np.shape(Region))
 #        print(Norm)
         Region = Region / Norm
         self.Region = np.sqrt(Region)
         self.name = name
-        self.Number = self.product_number(jump_list)
+        self.Number = len(self.product_number(jump_list))
 
     def SetLocationOnDisplay(self, Loc):
-        LocationOnDisplay = Loc
+        self.LocationOnDisplay = Loc
 
     def overlap(self, ProductPlacement):
         return np.vdot(self.Region, ProductPlacement) / 3
@@ -37,7 +38,7 @@ class Products:
         for jump in jumplist[1:]:
             av_weigth += [jump / int(jump / np.mean(av_weigth) + 0.5)
                           for _ in range(int(jump / np.mean(av_weigth) + 0.5))]
-        return len(av_weigth), np.mean(av_weigth)
+        return av_weigth
 
 
 class Product_list:
@@ -47,26 +48,18 @@ class Product_list:
     LastVector = np.zeros(1000)
     GeometricParamter = 0.95  # magic number for series
 
-    def __init__(self,  all_brigthness_histories, ListOfNumbers, Geomter=0.95):
+    def __init__(self,  all_brigthness_histories, alljumps, Geomter=0.95):
         self.NumberOfProducts = len(all_brigthness_histories)
-        ListOfProducts = []
+        self.ListOfProducts = []
         for N in range(self.NumberOfProducts):
-            ListOfProducts.append(Products(
-                "{}".format(N), all_brigthness_histories[N], ListOfNumbers[N]))
+            self.ListOfProducts.append(Products(
+                "{}".format(N), all_brigthness_histories[N], alljumps[N]))
 
-        self.ListOfProducts = ListOfProducts
-        self.Memory = all_brigthness_histories[0][0] - all_brigthness_histories[0][0]
+        self.Memory = all_brigthness_histories[0][0] - \
+            all_brigthness_histories[0][0]
         self.LastVector = self.Memory
         self.GeometricParamter = Geomter
-
-        transitions = BestPositions(self)
-
-        beginning = 0
-        for k in range(len(transitions)):
-            end = transitions[len(transitions) - k]
-            ListOfProducts[len(transitions) - k].SetLocationOnDisplay(
-                [beginning / transitions[-1], end / transitions[-1]])
-            beginning = end
+        BestPositions(self)
 
     def WhichProduct(self):  # timing is given by scale
                     # could be an issue that we only use geometric series here
@@ -83,8 +76,8 @@ class Product_list:
         return [np.array(probabilities), GoodsName]
 
     def update(self, VectorToMemorize):
-        self.Memory *= self.GeometricParamter
-        self.Memory += (VectorToMemorize - self.LastVector)
+        self.Memory = self.Memory * self.GeometricParamter
+        self.Memory = self.Memory + (VectorToMemorize - self.LastVector)
         self.LastVector = VectorToMemorize
 
     def Recall(self):
