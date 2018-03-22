@@ -11,7 +11,8 @@ class GaussModels:
         for k in range(len(ListOfListOfVectors)):
             mean = np.mean(ListOfListOfVectors[k], axis=0)
             print("the mean is {}".format(mean))
-            covariance_matrix = np.cov(np.array(ListOfListOfVectors[k]).T)
+            #covariance_matrix = np.cov(np.array(ListOfListOfVectors[k]).T)
+            covariance_matrix = 20
             print("the covariance matrix is {}".format(covariance_matrix))
             self.list_of_gaussians.append(
                 multivariate_normal(mean, covariance_matrix))

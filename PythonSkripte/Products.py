@@ -20,12 +20,13 @@ class Products:
             Norm += np.sum((oldvector - k)**2, axis=0)
             oldvector = k
         Norm = np.transpose(np.reshape(np.repeat(Norm, 50), (3, 50)))
- #       print(np.shape(Norm), np.shape(Region))
+#        print(np.shape(Norm), np.shape(Region))
 #        print(Norm)
         Region = Region / Norm
         self.Region = np.sqrt(Region)
         self.name = name
-        self.Number = len(self.product_number(jump_list))
+        self.Number = len(self.massuered_weights(jump_list))
+        self.product_weigth = np.mean(self.massuered_weights(jump_list))
 
     def SetLocationOnDisplay(self, Loc):
         self.LocationOnDisplay = Loc
@@ -33,7 +34,7 @@ class Products:
     def overlap(self, ProductPlacement):
         return np.vdot(self.Region, ProductPlacement) / 3
 
-    def product_number(self, jumplist):
+    def massuered_weights(self, jumplist):
         av_weigth = [jumplist[0]]
         for jump in jumplist[1:]:
             av_weigth += [jump / int(jump / np.mean(av_weigth) + 0.5)
@@ -85,6 +86,6 @@ class Product_list:
 
     def ChangeNumber(self, Number, jump_size):
         self.ListOfProducts[Number].Number += int(
-            jump_size / self.ListOfProducts[Number].product_weigth + 0.5)
+            jump_size / self.ListOfProducts[Number].product_weigth + np.sign(jump_size) * 0.5)
         if self.ListOfProducts[Number].Number < 0:
             raise Exception("negative number of items on the shelf!")

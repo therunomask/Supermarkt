@@ -39,7 +39,7 @@ while(True):
     scale1.update()
     _, frame = cap.read()
     allframes.append(get_shelf_av(frame, corners, 200, 50))
-    # frame=mingziframe
+    frame = drawArea(frame, corners, 0, 1, 0, 0.3)
     cv2.imshow('frame', frame)
     frame_list.append(frame)
     timestamps.append(time.time())
@@ -53,25 +53,28 @@ while(True):
         allframes = []
         alljumps.append(copy.deepcopy(jumps_per_product))
         jumps_per_product = []
-    if items == 2:
+    if items == 5:
         break
 regions = Product_list(allproducts, alljumps)
 weight_prob = GaussModels(
-    [regions.ListOfProducts[0].product_number(jump) for jump in alljumps])
+    [regions.ListOfProducts[0].massuered_weights(jump) for jump in alljumps])
 while(True):
     _, frame = cap.read()
     scale1.update()
     regions.update(get_shelf_av(copy.deepcopy(frame), corners, 200, 50))
     if scale1.detect_jump() == True:
+        jump = scale1.jump_size()
+        print(jump)
         probabilities = weight_prob.classifier(np.absolute(
-            scale1.jump_size())) * regions.WhichProduct()[0]
+            jump)) * regions.WhichProduct()[0]
+        print(jump)
         N = np.argmax(probabilities)
-        regions.ChangeNumber(N, scale1.jump_size())
+        regions.ChangeNumber(N, jump)
     for num, stuff in enumerate(regions.ListOfProducts):
         frame = drawArea(
-            frame, corners, stuff.LocationOnDisplay[0], stuff.LocationOnDisplay[1], num % 3, 0.3)
+            frame, copy.deepcopy(corners), stuff.LocationOnDisplay[0], stuff.LocationOnDisplay[1], num, 0.3)
         frame = draw_number(
-            frame, corners, stuff.LocationOnDisplay[0], stuff.LocationOnDisplay[1], num % 3, stuff.Number)
+            frame, copy.deepcopy(corners), stuff.LocationOnDisplay[0], stuff.LocationOnDisplay[1], num, stuff.Number)
     cv2.imshow('frame', frame)
     frame_list.append(frame)
     timestamps.append(time.time())

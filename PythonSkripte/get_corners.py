@@ -68,7 +68,7 @@ def get_right_corners(corner_list):
                    is not np.NaN and corner[1] is not np.NaN]
     corner_list = np.asarray(corner_list)
     if len(corner_list) == 4:
-        a = corner_list
+        a = list(corner_list)
     elif len(corner_list) == 5:
         distance_list = []
         for num1, _ in enumerate(corner_list):

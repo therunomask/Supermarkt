@@ -24,7 +24,6 @@ class scale():
         data = self.dev.read(self.endpoint.bEndpointAddress,
                              self.endpoint.wMaxPacketSize)
         self.weight_memory.append(data[-1] * 255 + data[-2])
-        print(self.weight_memory[-1])
         if abs(self.weight_memory[-1] - self.weight_memory[-2]) > self.treshhold:
             self.jump_memory.append(True)
         else:
