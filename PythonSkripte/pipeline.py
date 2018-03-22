@@ -5,8 +5,8 @@ import copy
 from Supermarkt.PythonSkripte.get_corners import get_corners
 from Supermarkt.PythonSkripte.Products import Product_list
 from Supermarkt.PythonSkripte.get_shelf_av import get_shelf_av
-from Supermarkt.PythonSkripte.scale_gauss_model import GaussModels
-from Supermarkt.PythonSkripte.scale_jumps import scale"""
+from Supermarkt.PythonSkripte.scale_gauss_model import GaussModels"""
+from Supermarkt.PythonSkripte.scale_jumps import scale
 from visualisation import drawArea, draw_number
 from get_corners import get_corners
 from Products import Product_list
@@ -16,6 +16,7 @@ from scale_gauss_model import GaussModels
 import time
 import threading
 from microphone import AudioRecording
+from ReplaceAudio import replace_audio
 
 
 thread_signal = False
@@ -42,7 +43,9 @@ t1.start()
 
 
 timestamps = []
-frame_list = []
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480))
+#frame_list = []
 #cap = cv2.VideoCapture('20171026_213832.mp4')
 #cap.set(cv2.CAP_PROP_POS_FRAMES, 500)
 cap = cv2.VideoCapture(0)
@@ -55,13 +58,12 @@ while(True):
     print(cornerlist[-1])
     frame = drawArea(frame, cornerlist[-1], 0, 1, 0, 0.3)
     cv2.imshow('frame', frame)
-    frame_list.append(frame)
+    out.write(frame)
+    # frame_list.append(frame)
     timestamps.append(time.time())
     print(cornerlist[-1])
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-
-
 """
 corners = np.mean(cornerlist[-1:-10:-1], axis=0)
 items = 0
@@ -76,7 +78,8 @@ while(True):
     allframes.append(get_shelf_av(frame, corners, 200, 50))
     frame = drawArea(frame, corners, 0, 1, 0, 0.3)
     cv2.imshow('frame', frame)
-    frame_list.append(frame)
+    out.write(frame)
+    # frame_list.append(frame)
     timestamps.append(time.time())
     if scale1.detect_jump() == True:
         print(scale1.jump_size())
@@ -111,18 +114,21 @@ while(True):
         frame = draw_number(
             frame, copy.deepcopy(corners), stuff.LocationOnDisplay[0], stuff.LocationOnDisplay[1], num, stuff.Number)
     cv2.imshow('frame', frame)
-    frame_list.append(frame)
+    # frame_list.append(frame)
+    out.write(frame)
     timestamps.append(time.time())
     if cv2.waitKey(1) & 0xFF == ord('w'):
         break
-
+"""
 cap.release()
+out.release()
 cv2.destroyAllWindows()
 print('corners')
-"""
+
 # signal to audioloop to stop recording
 thread_signal = True
 
 
 # join() waits for the thread to finish
 t1.join()
+replace_audio("output", "newvideo")
