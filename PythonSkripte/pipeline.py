@@ -1,13 +1,45 @@
 import cv2
 import numpy as np
 import copy
-from Supermarkt.PythonSkripte.visualisation import drawArea, draw_number
+""""from Supermarkt.PythonSkripte.visualisation import drawArea, draw_number
 from Supermarkt.PythonSkripte.get_corners import get_corners
 from Supermarkt.PythonSkripte.Products import Product_list
 from Supermarkt.PythonSkripte.get_shelf_av import get_shelf_av
 from Supermarkt.PythonSkripte.scale_gauss_model import GaussModels
-from Supermarkt.PythonSkripte.scale_jumps import scale
+from Supermarkt.PythonSkripte.scale_jumps import scale"""
+from visualisation import drawArea, draw_number
+from get_corners import get_corners
+from Products import Product_list
+from get_shelf_av import get_shelf_av
+from scale_gauss_model import GaussModels
+#from scale_jumps import scale
 import time
+import threading
+from microphone import AudioRecording
+
+
+thread_signal = False
+
+
+def AudioLoop():
+    """Thread needs a function to call 
+    in this example the thread executing this
+    function simply waits for the global variable
+    to change value. Which is done by the other thread"""
+    global thread_signal
+    recording = AudioRecording()
+    while thread_signal == False:
+        recording.update()
+        time.sleep(0.1)
+    recording.close()
+
+
+t1 = threading.Thread(target=AudioLoop)
+
+
+# Thread.start() forces the object to execute its target()
+t1.start()
+
 
 timestamps = []
 frame_list = []
@@ -28,6 +60,9 @@ while(True):
     print(cornerlist[-1])
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+
+
+"""
 corners = np.mean(cornerlist[-1:-10:-1], axis=0)
 items = 0
 allframes = []
@@ -84,3 +119,10 @@ while(True):
 cap.release()
 cv2.destroyAllWindows()
 print('corners')
+"""
+# signal to audioloop to stop recording
+thread_signal = True
+
+
+# join() waits for the thread to finish
+t1.join()
