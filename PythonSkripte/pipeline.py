@@ -20,6 +20,8 @@ from ReplaceAudio import replace_audio
 
 
 thread_signal = False
+endtimea = 0
+starttimea = 0
 
 
 def AudioLoop():
@@ -28,10 +30,14 @@ def AudioLoop():
     function simply waits for the global variable
     to change value. Which is done by the other thread"""
     global thread_signal
+    global endtimea
+    global starttimea
+    starttimea = time.time()
     recording = AudioRecording()
     while thread_signal == False:
         recording.update()
         time.sleep(0.1)
+    endtimea = time.time()
     recording.close()
 
 
@@ -58,6 +64,7 @@ while(True):
     print(cornerlist[-1])
     frame = drawArea(frame, cornerlist[-1], 0, 1, 0, 0.3)
     cv2.imshow('frame', frame)
+    startv = time.time()
     out.write(frame)
     # frame_list.append(frame)
     timestamps.append(time.time())
@@ -121,6 +128,7 @@ while(True):
         break
 """
 cap.release()
+endv = time.time()
 out.release()
 cv2.destroyAllWindows()
 print('corners')
@@ -131,4 +139,5 @@ thread_signal = True
 
 # join() waits for the thread to finish
 t1.join()
+shorten_audio()
 replace_audio("output", "newvideo")
