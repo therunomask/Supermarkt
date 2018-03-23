@@ -11,7 +11,7 @@ class scale():
     dev = []
     endpoint = []
 
-    def __init__(self, delay=5, treshhold=20):
+    def __init__(self, delay=3, treshhold=20):
         self.weight_memory = [0 for _ in range(30)]
         self.jump_memory = [False for _ in range(30)]
         self.delay = delay

@@ -63,7 +63,6 @@ def corner(a, b, c, d):
 
 
 def get_right_corners(corner_list):
-    print(corner_list)
     corner_list = [corner for corner in corner_list if corner[0]
                    is not np.NaN and corner[1] is not np.NaN]
     corner_list = np.asarray(corner_list)
@@ -88,7 +87,6 @@ def get_right_corners(corner_list):
             distance_list)][0] != num and hits[np.argmin(distance_list)][1] != num]
     else:
         return corner_list
-    print(a)
     a.sort(key=lambda x: x[0] + x[1])
     a[1:3] = a[2:0:-1]
     return a

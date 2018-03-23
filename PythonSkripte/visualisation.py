@@ -7,16 +7,16 @@ def drawArea(frame, pts, ratio1, ratio2, color_nr, alpha):
                     [ratio2 * pts[3] + (1 - ratio2) * pts[2]], [ratio1 * pts[3] + (1 - ratio1) * pts[2]]], np.int32)
     overlay = frame.copy()
     output = frame.copy()
-    if color_nr == 1:
+    if color_nr == 0:
         color = (255, 0, 0)
-    elif color_nr == 2:
+    elif color_nr == 1:
         color = (0, 255, 0)
-    elif color_nr == 3:
+    elif color_nr == 2:
         color = (0, 0, 255)
-    elif color_nr == 4:
+    elif color_nr == 3:
         color = (123, 123, 0)
     else:
-        color = (0, 123, 123)
+        color = (123, 0, 123)
 
     cv2.polylines(overlay, [pts], True, color)
     cv2.fillPoly(overlay, np.int_([pts]), color)
@@ -25,24 +25,18 @@ def drawArea(frame, pts, ratio1, ratio2, color_nr, alpha):
     return output
 
 
-def draw_number(frame, pts, ratio1, ratio2, color_nr, number):
-    pts1 = np.array([[ratio1 * pts[1] + (1 - ratio1) * pts[0]], [ratio2 * pts[1] + (1 - ratio2) * pts[0]],
-                     [ratio1 * pts[3] + (1 - ratio1) * pts[2]], [ratio2 * pts[3] + (1 - ratio2) * pts[2]]], np.int32)
-    pts[0] = 2 * pts1[0] - pts1[2]
-    pts[1] = 2 * pts1[1] - pts1[3]
-    pts[2] = pts1[0]
-    pts[3] = pts1[1]
-    if color_nr == 1:
+def draw_number(frame, picture_position, color_nr, number):
+    if color_nr == 0:
         color = (255, 0, 0)
-    elif color_nr == 2:
+    elif color_nr == 1:
         color = (0, 255, 0)
-    elif color_nr == 3:
+    elif color_nr == 2:
         color = (0, 0, 255)
-    elif color_nr == 4:
+    elif color_nr == 3:
         color = (123, 123, 0)
     else:
-        color = (0, 123, 123)
-    cv2.putText(frame, str(number), tuple((ratio1 * pts[1] + (1 - ratio1) * pts[0]).astype(int)), cv2.FONT_HERSHEY_SIMPLEX,
+        color = (123, 0, 123)
+    cv2.putText(frame, str(number), picture_position, cv2.FONT_HERSHEY_SIMPLEX,
                 2, color, 2, cv2.LINE_AA)
     return frame
 

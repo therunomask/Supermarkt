@@ -9,6 +9,7 @@ class Products:
     LocationOnDisplay = []
     Number = 1
     product_weigth = 0
+    picture_position = 0
 
     def __init__(self, name, brigthness_history, jump_list):
         oldvector = brigthness_history[0]
@@ -61,6 +62,15 @@ class Product_list:
         self.LastVector = self.Memory
         self.GeometricParamter = Geomter
         BestPositions(self)
+        self.update_picture_positions()
+
+    def update_picture_positions(self):
+        locations = [[x.LocationOnDisplay[0], num]
+                     for num, x in enumerate(self.ListOfProducts)]
+        locations.sort(key=lambda x: x[0])
+        for num, loc in enumerate(locations):
+            self.ListOfProducts[loc[1]].picture_position = (
+                170 + 75 * num, 270)
 
     def WhichProduct(self):  # timing is given by scale
                     # could be an issue that we only use geometric series here

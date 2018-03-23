@@ -73,8 +73,8 @@ waveFile.writeframes(b''.join(frames))
 waveFile.close()
 """
 
-recording = AudioRecording()
-for i in range(0, int(recording.RATE / recording.CHUNK * 10)):
-    recording.update()
-
-recording.close()
+# recording = AudioRecording()
+# for i in range(0, int(recording.RATE / recording.CHUNK * 10)):
+#     recording.update()
+#
+# recording.close()
